@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>আমাদের তহবিল</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --paper:#F2E8CE;
+    --paper-2:#EAE0C2;
+    --ink:#241C10;
+    --ink-soft:#5B4E36;
+    --cover:#1F3A2E;
+    --cover-2:#294A3A;
+    --gold:#B8862E;
+    --gold-line: rgba(184,134,46,0.45);
+    --stamp:#8C2B21;
+    --stamp-soft: rgba(140,43,33,0.12);
+    --mint:#3E7A5D;
+    --mint-soft: rgba(62,122,93,0.15);
+    --shadow: rgba(36,28,16,0.14);
+    --card-border: rgba(36,28,16,0.16);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark){
+      --paper:#132019;
+      --paper-2:#182920;
+      --ink:#EFE3C0;
+      --ink-soft:#B7A87F;
+      --cover:#0E1B15;
+      --cover-2:#152A20;
+      --gold:#D8AE5C;
+      --gold-line: rgba(216,174,92,0.35);
+      --stamp:#D2564A;
+      --stamp-soft: rgba(210,86,74,0.16);
+      --mint:#5FAE87;
+      --mint-soft: rgba(95,174,135,0.18);
+      --shadow: rgba(0,0,0,0.45);
+      --card-border: rgba(216,174,92,0.22);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#132019;
+    --paper-2:#182920;
+    --ink:#EFE3C0;
+    --ink-soft:#B7A87F;
+    --cover:#0E1B15;
+    --cover-2:#152A20;
+    --gold:#D8AE5C;
+    --gold-line: rgba(216,174,92,0.35);
+    --stamp:#D2564A;
+    --stamp-soft: rgba(210,86,74,0.16);
+    --mint:#5FAE87;
+    --mint-soft: rgba(95,174,135,0.18);
+    --shadow: rgba(0,0,0,0.45);
+    --card-border: rgba(216,174,92,0.22);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    min-height:100vh;
+    padding-bottom:76px;
+    overflow-x:hidden;
+  }
+  .num{ font-variant-numeric: tabular-nums; }
+
+  /* ---------- Header / cover ---------- */
+  .cover{
+    background: linear-gradient(160deg, var(--cover), var(--cover-2));
+    padding:22px 18px 30px;
+    border-bottom: 3px solid var(--gold);
+    position:relative;
+  }
+  .cover-top{
+    display:flex; align-items:center; justify-content:space-between;
+    color:var(--gold);
+  }
+  .cover-title{
+    font-family:'Tiro Bangla', 'Noto Serif Bengali', serif;
+    font-size:17px;
+    letter-spacing:0.02em;
+    color:#EFE3C0;
+  }
+  .cover-sub{
+    font-size:12px;
+    color: var(--gold);
+    opacity:0.85;
+  }
+  .seal-wrap{
+    display:flex; flex-direction:column; align-items:center; margin-top:18px;
+  }
+  .seal{
+    width:168px; height:168px;
+    border-radius:50%;
+    border: 3px solid var(--gold);
+    box-shadow: inset 0 0 0 5px rgba(184,134,46,0.14);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: radial-gradient(circle at 50% 35%, rgba(216,174,92,0.10), transparent 70%);
+  }
+  .seal-amount{
+    font-family:'Tiro Bangla', serif;
+    font-size:34px;
+    color:#F4E9C8;
+    line-height:1.1;
+  }
+  .seal-label{
+    font-size:11.5px;
+    color: var(--gold);
+    margin-top:4px;
+    text-align:center;
+    max-width:120px;
+  }
+
+  /* ---------- Layout ---------- */
+  .wrap{ max-width:520px; margin:0 auto; padding:0 16px; }
+  .section-title{
+    font-family:'Tiro Bangla', serif;
+    font-size:17px;
+    margin: 22px 0 10px;
+    color: var(--ink);
+    display:flex; align-items:center; gap:8px;
+  }
+  .section-title .rule{ flex:1; height:1px; background: var(--gold-line); }
+
+  .card{
+    background: var(--paper-2);
+    border: 1px solid var(--card-border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    box-shadow: 0 1px 0 var(--shadow);
+  }
+  .card + .card{ margin-top:0; }
+  .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .stat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .stat-box{
+    background: var(--paper-2);
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    padding:12px 14px;
+  }
+  .stat-box .label{ font-size:12px; color:var(--ink-soft); }
+  .stat-box .value{ font-family:'Tiro Bangla', serif; font-size:20px; margin-top:3px; }
+
+  .leader-row{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 0;
+    border-bottom: 1px dashed var(--card-border);
+  }
+  .leader-row:last-child{ border-bottom:none; }
+  .rank-badge{
+    width:26px; height:26px; border-radius:50%;
+    background: var(--mint-soft); color:var(--mint);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:600; flex-shrink:0;
+  }
+  .rank-badge.top{ background: var(--stamp-soft); color:var(--stamp); }
+  .leader-name{ flex:1; font-weight:600; }
+  .leader-amount{ font-family:'Tiro Bangla', serif; }
+
+  .goal-bar-track{
+    height:10px; border-radius:6px; background: var(--card-border); overflow:hidden; margin-top:10px;
+  }
+  .goal-bar-fill{
+    height:100%; background: var(--mint); border-radius:6px; transition: width .4s ease;
+  }
+
+  .empty-note{
+    color: var(--ink-soft); font-size:14px; text-align:center; padding:18px 8px;
+  }
+
+  /* ---------- Forms ---------- */
+  label{ display:block; font-size:13px; color:var(--ink-soft); margin:12px 0 5px; }
+  label:first-child{ margin-top:0; }
+  input[type=text], input[type=number], input[type=date], input[type=password], select{
+    width:100%; padding:11px 12px;
+    border-radius:8px; border:1px solid var(--card-border);
+    background: var(--paper); color:var(--ink);
+    font-family:'Hind Siliguri', sans-serif; font-size:15px;
+  }
+  input:focus, select:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+  .btn{
+    width:100%; padding:12px 14px; margin-top:16px;
+    border:none; border-radius:8px;
+    background: var(--stamp); color:#F6EFE0;
+    font-family:'Hind Siliguri', sans-serif; font-weight:600; font-size:15px;
+    cursor:pointer;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn.secondary{ background: var(--mint); }
+  .btn.ghost{
+    background: transparent; border:1px solid var(--card-border); color:var(--ink);
+  }
+  .field-error{ color:var(--stamp); font-size:12.5px; margin-top:6px; min-height:16px; }
+
+  .entry-item{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 0; border-bottom:1px dashed var(--card-border);
+  }
+  .entry-item:last-child{ border-bottom:none; }
+  .entry-serial{
+    width:40px; height:40px; border-radius:8px;
+    background: var(--paper); border:1px solid var(--card-border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:var(--ink-soft); flex-shrink:0; text-align:center;
+  }
+  .entry-mid{ flex:1; min-width:0; }
+  .entry-person{ font-weight:600; font-size:14.5px; }
+  .entry-date{ font-size:12px; color:var(--ink-soft); }
+  .entry-amount{ font-family:'Tiro Bangla', serif; font-size:16px; }
+  .del-btn{
+    background:none; border:none; color:var(--ink-soft); font-size:18px; cursor:pointer;
+    padding:4px 6px;
+  }
+
+  .toggle-group{ display:flex; gap:8px; margin-bottom:12px; }
+  .toggle-btn{
+    flex:1; padding:9px; text-align:center; border-radius:8px;
+    border:1px solid var(--card-border); background:var(--paper-2); color:var(--ink-soft);
+    cursor:pointer; font-size:14px;
+  }
+  .toggle-btn.active{ background: var(--cover); color:#F0E6C8; border-color:var(--cover); }
+
+  .chart-wrap{ background:var(--paper-2); border:1px solid var(--card-border); border-radius:10px; padding:14px; }
+
+  /* ---------- Tab bar ---------- */
+  .tabbar{
+    position:fixed; bottom:0; left:0; right:0;
+    background: var(--cover);
+    border-top: 2px solid var(--gold);
+    display:flex;
+    z-index:40;
+  }
+  .tab-btn{
+    flex:1; background:none; border:none; padding:9px 4px 8px;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    color: rgba(239,227,192,0.55);
+    font-family:'Hind Siliguri', sans-serif; font-size:11.5px;
+    cursor:pointer;
+  }
+  .tab-btn .icon{ font-size:19px; line-height:1; }
+  .tab-btn.active{ color:#F4E9C8; }
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(15,20,17,0.55);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    z-index:100;
+  }
+  .modal{
+    background:var(--paper); border:1px solid var(--gold-line);
+    border-radius:12px; padding:20px; width:100%; max-width:340px;
+  }
+  .modal h3{ font-family:'Tiro Bangla', serif; margin:0 0 4px; font-size:17px; }
+  .modal p{ font-size:13px; color:var(--ink-soft); margin:0 0 10px; }
+  .modal-actions{ display:flex; gap:10px; margin-top:14px; }
+  .modal-actions .btn{ margin-top:0; }
+
+  .toast{
+    position:fixed; bottom:88px; left:50%; transform:translateX(-50%);
+    background: var(--ink); color: var(--paper);
+    padding:10px 18px; border-radius:20px; font-size:13.5px;
+    z-index:200; opacity:0; pointer-events:none; transition: opacity .25s ease;
+  }
+  .toast.show{ opacity:1; }
+
+  .chip{
+    display:inline-flex; align-items:center; gap:4px;
+    padding:5px 10px; border-radius:20px; font-size:12px;
+    background: var(--mint-soft); color: var(--mint);
+  }
+  .chip.gold{ background: var(--stamp-soft); color: var(--stamp); }
+  .badge-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .streak-chip{
+    font-size:11px; color: var(--ink-soft); background: var(--paper);
+    border:1px solid var(--card-border); border-radius:20px; padding:2px 7px;
+    flex-shrink:0;
+  }
+  .tease-card{ background: var(--stamp-soft); border-color: var(--gold-line); }
+  .tease-card .tease-text{ font-size:14px; line-height:1.5; }
+  .share-row{ margin-bottom:12px; }
+  .share-row:last-child{ margin-bottom:0; }
+  .share-row .row{ margin-bottom:5px; font-size:13.5px; }
+  .share-track{ height:7px; border-radius:5px; background: var(--card-border); overflow:hidden; }
+  .share-fill{ height:100%; background: var(--gold); border-radius:5px; }
+  .goal-eta{ font-size:12.5px; color: var(--ink-soft); margin-top:8px; }
+
+  .timeline-date{ font-size:12px; color:var(--ink-soft); font-weight:600; margin:16px 0 6px; }
+  .timeline-date:first-child{ margin-top:0; }
+  .timeline-item{ position:relative; padding-left:16px; padding-bottom:11px; border-left:2px solid var(--gold-line); }
+  .timeline-item:last-child{ border-left-color:transparent; padding-bottom:0; }
+  .timeline-dot{ position:absolute; left:-5px; top:3px; width:9px; height:9px; border-radius:50%; background:var(--gold); }
+  .timeline-row{ display:flex; align-items:center; gap:8px; }
+
+  .confetti-piece{
+    position:fixed; top:-12px; width:8px; height:14px; border-radius:2px;
+    z-index:300; pointer-events:none;
+    animation: confetti-fall 1.6s ease-in forwards;
+  }
+  @keyframes confetti-fall{ to{ transform: translateY(112vh) rotate(360deg); opacity:0.25; } }
+
+  .milestone-banner{
+    position:fixed; top:14px; left:50%; transform:translateX(-50%);
+    background: var(--cover); color:#F4E9C8; border:1px solid var(--gold);
+    padding:11px 20px; border-radius:10px; font-size:14px;
+    z-index:250; text-align:center; max-width:84%;
+    box-shadow: 0 4px 14px var(--shadow);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="cover-top">
+      <div class="cover-title">আমাদের তহবিল</div>
+      <div class="cover-sub" id="memberCountLabel">৪ জনের হিসাব</div>
+    </div>
+    <div class="seal-wrap">
+      <div class="seal">
+        <div class="seal-amount num" id="sealTotal">৳ ০</div>
+        <div class="seal-label">সর্বমোট জমা</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="app"></div>
+
+<div class="tabbar">
+  <button class="tab-btn" data-tab="home"><span class="icon">🏠</span><span>হোম</span></button>
+  <button class="tab-btn" data-tab="entry"><span class="icon">🧾</span><span>এন্ট্রি</span></button>
+  <button class="tab-btn" data-tab="chart"><span class="icon">📊</span><span>গ্রাফ</span></button>
+  <button class="tab-btn" data-tab="settings"><span class="icon">⚙️</span><span>সেটিংস</span></button>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function(){
+
+// ---------------- state ----------------
+const MEMBERS = ["Sadik","Sultan","Mozaher","Sultana"];
+let entries = [];
+let config = { laptopName:"", laptopModel:"", laptopPrice:null };
+let currentTab = "home";
+let chartMode = "weekly";
+let chartInstance = null;
+
+const app = document.getElementById("app");
+const sealTotal = document.getElementById("sealTotal");
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+function money(n){
+  n = Number(n)||0;
+  return "৳ " + n.toLocaleString("en-US");
+}
+
+function todayStr(){
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+
+// ---------------- data loading (API) ----------------
+async function loadAll(){
+  try{
+    const [cRes, eRes] = await Promise.all([fetch('/api/config'), fetch('/api/entries')]);
+    if(cRes.ok) config = await cRes.json();
+    if(eRes.ok) entries = await eRes.json();
+    render();
+    checkMilestones();
+  }catch(e){
+    toast("সার্ভারের সাথে সংযোগ করা যায়নি");
+  }
+}
+
+// ---------------- derived data ----------------
+function totalAll(){ return entries.reduce((s,e)=>s+(Number(e.amount)||0),0); }
+function totalToday(){
+  const t = todayStr();
+  return entries.filter(e=>e.date===t).reduce((s,e)=>s+(Number(e.amount)||0),0);
+}
+function perPersonTotals(){
+  const map = {};
+  MEMBERS.forEach(m=>map[m]=0);
+  entries.forEach(e=>{ map[e.person] = (map[e.person]||0) + (Number(e.amount)||0); });
+  return MEMBERS.map(m=>({person:m, total:map[m]||0})).sort((a,b)=>b.total-a.total);
+}
+function latestEntry(){
+  if(!entries.length) return null;
+  return entries.slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0))[0];
+}
+
+function currentStreak(person){
+  const weeks = new Set(entries.filter(e=>e.person===person && e.date).map(e=>isoWeekKey(e.date)));
+  if(weeks.size===0) return 0;
+  let d = new Date();
+  const curWeek = isoWeekKey(d.toISOString().slice(0,10));
+  if(!weeks.has(curWeek)) d.setDate(d.getDate()-7);
+  let streak = 0;
+  while(true){
+    const wk = isoWeekKey(d.toISOString().slice(0,10));
+    if(weeks.has(wk)){ streak++; d.setDate(d.getDate()-7); } else break;
+  }
+  return streak;
+}
+
+function topDonorFor(mode){
+  const key = mode==="weekly" ? isoWeekKey(todayStr()) : monthKey(todayStr());
+  const map = {};
+  entries.forEach(e=>{
+    if(!e.date) return;
+    const k = mode==="weekly" ? isoWeekKey(e.date) : monthKey(e.date);
+    if(k===key) map[e.person] = (map[e.person]||0) + (Number(e.amount)||0);
+  });
+  let top = null;
+  Object.entries(map).forEach(([p,v])=>{ if(v>0 && (!top || v>top.total)) top = {person:p, total:v}; });
+  return top;
+}
+
+function estimateDaysToGoal(){
+  const target = Number(config.laptopPrice)||0;
+  if(target<=0 || entries.length===0) return null;
+  const collected = totalAll();
+  const remaining = target - collected;
+  if(remaining<=0) return { done:true };
+  const dates = entries.map(e=>e.date).filter(Boolean).sort();
+  const first = new Date(dates[0]+"T00:00:00");
+  const now = new Date();
+  const daysElapsed = Math.max(1, Math.round((now-first)/86400000));
+  const dailyRate = collected/daysElapsed;
+  if(dailyRate<=0) return null;
+  return { done:false, days: Math.ceil(remaining/dailyRate) };
+}
+
+const TEASE_LINES = [
+  "একটু চাপ দাও, {p}! সবাই এগিয়ে যাচ্ছে 👀",
+  "{p}, তহবিলে তোমার অংশটা একটু বাড়াও তো!",
+  "{p}, ল্যাপটপ কিন্তু একা কিনবে না 😄",
+  "সবচেয়ে কম দিয়েছে {p} — এবার একটু ধরো!"
+];
+const MOTIVATE_LINES = [
+  "দারুণ! তহবিল আরেকটু বড় হলো 🎉",
+  "চমৎকার! লক্ষ্যের আরেকটু কাছে পৌঁছালে",
+  "সাবাশ! এভাবেই চালিয়ে যাও 💪",
+  "একটা একটা করেই তো বড় সঞ্চয় হয়"
+];
+
+function pickLine(arr, seed){
+  const idx = Math.abs(seed) % arr.length;
+  return arr[idx];
+}
+
+function lowestTease(){
+  const ranked = perPersonTotals();
+  const nonZero = ranked.filter(r=>r.total>0);
+  if(nonZero.length<2) return null;
+  const lowest = ranked[ranked.length-1];
+  const seed = Number(todayStr().split("-").join("")) + lowest.person.length;
+  const line = pickLine(TEASE_LINES, seed).replace("{p}", lowest.person);
+  return { person: lowest.person, line };
+}
+
+function confettiBurst(big){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const colors = ['#D8AE5C','#8C2B21','#3E7A5D','#EFE3C0','#B8862E'];
+  const count = big ? 60 : 26;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = (Math.random()*100)+'vw';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDelay = (Math.random()*0.3)+'s';
+    el.style.animationDuration = (1.2+Math.random()*0.8)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2400);
+  }
+}
+
+function showMilestoneBanner(text){
+  const b = document.createElement('div');
+  b.className = 'milestone-banner';
+  b.textContent = text;
+  document.body.appendChild(b);
+  confettiBurst(true);
+  setTimeout(()=>b.remove(), 2800);
+}
+
+function checkMilestones(){
+  const target = Number(config.laptopPrice)||0;
+  if(target<=0) return;
+  const pct = Math.min(100, Math.floor(totalAll()/target*100));
+  const thresholds = [25,50,75,100];
+  let seen = 0;
+  try{ seen = Number(localStorage.getItem('fund_milestone_seen')||0); }catch(e){}
+  let toCelebrate = null;
+  thresholds.forEach(t=>{ if(pct>=t && seen<t) toCelebrate=t; });
+  if(toCelebrate){
+    try{ localStorage.setItem('fund_milestone_seen', String(toCelebrate)); }catch(e){}
+    showMilestoneBanner(toCelebrate===100 ? "🎉 লক্ষ্য পূরণ হয়ে গেছে!" : `🎉 লক্ষ্যের ${toCelebrate}% পূরণ হয়েছে!`);
+  }
+}
+
+// ---------------- PIN modal ----------------
+// Note: the PIN is verified on the server, not in this file, so it is never
+// exposed to anyone viewing the page source.
+function askPin(title, desc, onSubmit){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <h3>${title}</h3>
+      <p>${desc}</p>
+      <input type="password" inputmode="numeric" id="pinInput" placeholder="পিন দিন">
+      <div class="field-error" id="pinErr"></div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="pinCancel" style="flex:1">বাতিল</button>
+        <button class="btn" id="pinOk" style="flex:1">নিশ্চিত করুন</button>
+      </div>
+    </div>`;
+  document.body.appendChild(wrap);
+  const input = wrap.querySelector("#pinInput");
+  input.focus();
+  wrap.querySelector("#pinCancel").onclick = ()=> wrap.remove();
+  wrap.querySelector("#pinOk").onclick = ()=>{
+    const val = input.value.trim();
+    if(!val){
+      wrap.querySelector("#pinErr").textContent = "পিন দিন";
+      return;
+    }
+    wrap.remove();
+    onSubmit(val);
+  };
+  input.addEventListener("keydown", e=>{ if(e.key==="Enter") wrap.querySelector("#pinOk").click(); });
+}
+
+// ---------------- render router ----------------
+function render(){
+  document.querySelectorAll(".tab-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.tab===currentTab);
+  });
+  sealTotal.textContent = money(totalAll());
+
+  if(currentTab==="home") renderHome();
+  else if(currentTab==="entry") renderEntry();
+  else if(currentTab==="chart") renderChart();
+  else if(currentTab==="settings") renderSettings();
+}
+
+// ---------------- HOME ----------------
+function renderHome(){
+  const ranked = perPersonTotals();
+  const latest = latestEntry();
+  const target = Number(config.laptopPrice)||0;
+  const collected = totalAll();
+  const remaining = Math.max(target - collected, 0);
+  const pct = target>0 ? Math.min(100, Math.round(collected/target*100)) : 0;
+  const weeklyTop = topDonorFor("weekly");
+  const monthlyTop = topDonorFor("monthly");
+  const eta = estimateDaysToGoal();
+  const tease = lowestTease();
+  const share = target>0 ? target/MEMBERS.length : 0;
+
+  app.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-box"><div class="label">আজকের সংগ্রহ</div><div class="value num">${money(totalToday())}</div></div>
+      <div class="stat-box"><div class="label">মোট এন্ট্রি</div><div class="value num">${entries.length}</div></div>
+    </div>
+
+    ${(weeklyTop || monthlyTop) ? `
+    <div class="section-title"><span>সেরা দাতা</span><span class="rule"></span></div>
+    <div class="card">
+      <div class="badge-row">
+        ${weeklyTop ? `<div class="chip gold">🏆 এই সপ্তাহে: ${weeklyTop.person} (${money(weeklyTop.total)})</div>` : ""}
+        ${monthlyTop ? `<div class="chip">📅 এই মাসে: ${monthlyTop.person} (${money(monthlyTop.total)})</div>` : ""}
+      </div>
+    </div>` : ""}
+
+    <div class="section-title"><span>কে কত জমা দিয়েছে</span><span class="rule"></span></div>
+    <div class="card">
+      ${ranked.length===0 ? `<div class="empty-note">এখনো কোনো এন্ট্রি নেই। "এন্ট্রি" ট্যাব থেকে প্রথম এন্ট্রি যোগ করুন।</div>` :
+        ranked.map((r,i)=>{
+          const st = currentStreak(r.person);
+          return `
+          <div class="leader-row">
+            <div class="rank-badge ${i===0?'top':''}">${i+1}</div>
+            <div class="leader-name">${r.person} ${st>0 ? `<span class="streak-chip">🔥 ${st} সপ্তাহ</span>` : ""}</div>
+            <div class="leader-amount num">${money(r.total)}</div>
+          </div>
+        `;}).join("")}
+    </div>
+
+    ${tease ? `
+    <div class="card tease-card">
+      <div class="tease-text">😏 ${tease.line}</div>
+    </div>` : ""}
+
+    <div class="section-title"><span>সর্বশেষ এন্ট্রি</span><span class="rule"></span></div>
+    <div class="card">
+      ${latest ? `
+        <div class="row">
+          <div>
+            <div class="entry-person">${latest.person}</div>
+            <div class="entry-date">${latest.date} · নং ${latest.serial ?? "—"}</div>
+          </div>
+          <div class="entry-amount num">${money(latest.amount)}</div>
+        </div>
+      ` : `<div class="empty-note">এখনো কোনো এন্ট্রি হয়নি।</div>`}
+    </div>
+
+    <div class="section-title"><span>ল্যাপটপ লক্ষ্য</span><span class="rule"></span></div>
+    <div class="card">
+      ${target>0 ? `
+        <div class="row">
+          <div>
+            <div style="font-weight:600">${config.laptopName || "ল্যাপটপ"}</div>
+            <div class="entry-date">${config.laptopModel || ""}</div>
+          </div>
+          <div class="entry-amount num">${money(target)}</div>
+        </div>
+        <div class="goal-bar-track"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
+        <div class="row" style="margin-top:8px">
+          <div class="entry-date">জমা হয়েছে ${pct}%</div>
+          <div class="entry-date">${remaining>0 ? "বাকি " + money(remaining) : "লক্ষ্য পূরণ হয়েছে 🎉"}</div>
+        </div>
+        ${eta && !eta.done ? `<div class="goal-eta">বর্তমান গতিতে আনুমানিক আরও ${eta.days} দিনে লক্ষ্য পূরণ হতে পারে।</div>` : ""}
+      ` : `<div class="empty-note">এখনো ল্যাপটপের দাম যোগ করা হয়নি। সেটিংস ট্যাবে গিয়ে দাম বসান, বাকি হিসাব এখানেই দেখা যাবে।</div>`}
+    </div>
+
+    ${target>0 ? `
+    <div class="section-title"><span>ব্যক্তিগত ভাগ</span><span class="rule"></span></div>
+    <div class="card">
+      ${MEMBERS.map(m=>{
+        const total = (ranked.find(r=>r.person===m)||{total:0}).total;
+        const p = share>0 ? Math.min(100, Math.round(total/share*100)) : 0;
+        return `
+        <div class="share-row">
+          <div class="row"><span>${m}</span><span class="num">${money(total)} / ${money(share)}</span></div>
+          <div class="share-track"><div class="share-fill" style="width:${p}%"></div></div>
+        </div>`;
+      }).join("")}
+    </div>` : ""}
+  `;
+}
+
+// ---------------- ENTRY ----------------
+function renderTimeline(list){
+  let html = "";
+  let lastDate = null;
+  list.forEach(e=>{
+    if(e.date !== lastDate){
+      html += `<div class="timeline-date">${e.date}</div>`;
+      lastDate = e.date;
+    }
+    html += `
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-row">
+          <div class="entry-mid">
+            <div class="entry-person">${e.person}</div>
+            <div class="entry-date">নং ${e.serial ?? "—"}</div>
+          </div>
+          <div class="entry-amount num">${money(e.amount)}</div>
+          <button class="del-btn" data-id="${e.id}" title="মুছুন">🗑️</button>
+        </div>
+      </div>`;
+  });
+  return html;
+}
+
+function renderEntry(){
+  const list = entries.slice().sort((a,b)=>{
+    if(a.date!==b.date) return a.date<b.date?1:-1;
+    return (b.createdAt||0)-(a.createdAt||0);
+  });
+
+  app.innerHTML = `
+    <div class="section-title"><span>নতুন এন্ট্রি</span><span class="rule"></span></div>
+    <div class="card">
+      <label for="fSerial">রশিদের ক্রমিক নম্বর</label>
+      <input type="text" id="fSerial" placeholder="যেমন: ১২">
+
+      <label for="fAmount">টাকার পরিমান</label>
+      <input type="number" id="fAmount" placeholder="যেমন: ৫০০">
+
+      <label for="fDate">তারিখ</label>
+      <input type="date" id="fDate" value="${todayStr()}">
+
+      <label for="fPerson">কে জমা দিয়েছে</label>
+      <select id="fPerson">
+        ${MEMBERS.map(m=>`<option value="${m}">${m}</option>`).join("")}
+      </select>
+
+      <div class="field-error" id="entryErr"></div>
+      <button class="btn" id="submitEntry">এন্ট্রি যোগ করুন</button>
+    </div>
+
+    <div class="section-title"><span>টাইমলাইন (${list.length})</span><span class="rule"></span></div>
+    <div class="card">
+      ${list.length===0 ? `<div class="empty-note">এখনো কোনো এন্ট্রি যোগ করা হয়নি।</div>` : renderTimeline(list)}
+    </div>
+  `;
+
+  document.getElementById("submitEntry").onclick = ()=>{
+    const serial = document.getElementById("fSerial").value.trim();
+    const amount = document.getElementById("fAmount").value.trim();
+    const date = document.getElementById("fDate").value;
+    const person = document.getElementById("fPerson").value;
+    const err = document.getElementById("entryErr");
+
+    if(!amount || Number(amount)<=0){ err.textContent = "সঠিক টাকার পরিমান লিখুন"; return; }
+    if(!date){ err.textContent = "তারিখ নির্বাচন করুন"; return; }
+    err.textContent = "";
+
+    askPin("পিন দিন", "এন্ট্রি সংরক্ষণ করতে পিন দিয়ে নিশ্চিত করুন।", async (pin)=>{
+      try{
+        const res = await fetch('/api/entries', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ serial: serial||null, amount:Number(amount), date, person, pin })
+        });
+        if(res.status===401){ toast("পিন সঠিক নয়"); return; }
+        if(!res.ok){ toast("এন্ট্রি সংরক্ষণ করা যায়নি"); return; }
+        confettiBurst(false);
+        toast(pickLine(MOTIVATE_LINES, Date.now()));
+        await loadAll();
+      }catch(e){ toast("সার্ভারে সংযোগ করা যায়নি"); }
+    });
+  };
+
+  app.querySelectorAll(".del-btn").forEach(btn=>{
+    btn.onclick = ()=>{
+      const id = btn.dataset.id;
+      askPin("পিন দিন", "এই এন্ট্রি মুছে ফেলতে পিন দিয়ে নিশ্চিত করুন।", async (pin)=>{
+        try{
+          const res = await fetch('/api/entries/'+id, {
+            method: 'DELETE',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ pin })
+          });
+          if(res.status===401){ toast("পিন সঠিক নয়"); return; }
+          if(!res.ok){ toast("মুছে ফেলা যায়নি"); return; }
+          toast("এন্ট্রি মুছে ফেলা হয়েছে");
+          await loadAll();
+        }catch(e){ toast("সার্ভারে সংযোগ করা যায়নি"); }
+      });
+    };
+  });
+}
+
+// ---------------- CHART ----------------
+function isoWeekKey(dateStr){
+  const d = new Date(dateStr+"T00:00:00");
+  const target = new Date(d.valueOf());
+  const dayNr = (d.getUTCDay()+6)%7;
+  target.setUTCDate(target.getUTCDate()-dayNr+3);
+  const firstThursday = new Date(Date.UTC(target.getUTCFullYear(),0,4));
+  const week = 1 + Math.round(((target-firstThursday)/86400000-3+((firstThursday.getUTCDay()+6)%7))/7);
+  return target.getUTCFullYear()+"-W"+String(week).padStart(2,"0");
+}
+function monthKey(dateStr){ return dateStr.slice(0,7); }
+
+function aggregate(mode){
+  const map = {};
+  entries.forEach(e=>{
+    if(!e.date) return;
+    const key = mode==="weekly" ? isoWeekKey(e.date) : monthKey(e.date);
+    map[key] = (map[key]||0) + (Number(e.amount)||0);
+  });
+  const keys = Object.keys(map).sort();
+  return { labels: keys, values: keys.map(k=>map[k]) };
+}
+
+function renderChart(){
+  app.innerHTML = `
+    <div class="section-title"><span>জমার প্রবণতা</span><span class="rule"></span></div>
+    <div class="toggle-group">
+      <div class="toggle-btn ${chartMode==='weekly'?'active':''}" id="modeWeekly">সাপ্তাহিক</div>
+      <div class="toggle-btn ${chartMode==='monthly'?'active':''}" id="modeMonthly">মাসিক</div>
+    </div>
+    <div class="chart-wrap">
+      ${entries.length===0 ? `<div class="empty-note">গ্রাফ দেখানোর জন্য এখনো যথেষ্ট এন্ট্রি নেই।</div>` : `<canvas id="fundChart" height="220"></canvas>`}
+    </div>
+  `;
+  document.getElementById("modeWeekly").onclick = ()=>{ chartMode="weekly"; renderChart(); };
+  document.getElementById("modeMonthly").onclick = ()=>{ chartMode="monthly"; renderChart(); };
+
+  if(entries.length===0) return;
+
+  const {labels, values} = aggregate(chartMode);
+  const ctx = document.getElementById("fundChart");
+  if(chartInstance) chartInstance.destroy();
+
+  const styles = getComputedStyle(document.documentElement);
+  const gold = styles.getPropertyValue('--gold').trim();
+  const ink = styles.getPropertyValue('--ink').trim();
+  const mint = styles.getPropertyValue('--mint').trim();
+
+  chartInstance = new Chart(ctx, {
+    type:"bar",
+    data:{
+      labels: labels,
+      datasets:[{
+        label: chartMode==="weekly" ? "সাপ্তাহিক জমা" : "মাসিক জমা",
+        data: values,
+        backgroundColor: mint,
+        borderRadius: 4,
+        maxBarThickness: 34
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ ticks:{ color: ink, font:{family:"Hind Siliguri"} }, grid:{ display:false } },
+        y:{ ticks:{ color: ink, font:{family:"Hind Siliguri"} }, grid:{ color: gold+"22" } }
+      }
+    }
+  });
+}
+
+// ---------------- SETTINGS ----------------
+function renderSettings(){
+  app.innerHTML = `
+    <div class="section-title"><span>ল্যাপটপ লক্ষ্য</span><span class="rule"></span></div>
+    <div class="card">
+      <label for="sName">ল্যাপটপের নাম</label>
+      <input type="text" id="sName" value="${config.laptopName||''}" placeholder="যেমন: HP Pavilion">
+      <label for="sModel">মডেল নম্বর</label>
+      <input type="text" id="sModel" value="${config.laptopModel||''}" placeholder="মডেল নম্বর">
+      <label for="sPrice">দাম</label>
+      <input type="number" id="sPrice" value="${config.laptopPrice||''}" placeholder="মোট দাম">
+      <button class="btn secondary" id="saveGoal">লক্ষ্য সংরক্ষণ করুন</button>
+    </div>
+
+    <div class="section-title"><span>এডমিন পিন পরিবর্তন</span><span class="rule"></span></div>
+    <div class="card">
+      <label for="oldPin">বর্তমান পিন</label>
+      <input type="password" id="oldPin" inputmode="numeric" placeholder="বর্তমান পিন">
+      <label for="newPin">নতুন পিন</label>
+      <input type="password" id="newPin" inputmode="numeric" placeholder="নতুন পিন">
+      <div class="field-error" id="pinChangeErr"></div>
+      <button class="btn" id="changePin">পিন পরিবর্তন করুন</button>
+    </div>
+  `;
+
+  document.getElementById("saveGoal").onclick = ()=>{
+    const name = document.getElementById("sName").value.trim();
+    const model = document.getElementById("sModel").value.trim();
+    const price = document.getElementById("sPrice").value.trim();
+    askPin("পিন দিন", "লক্ষ্য পরিবর্তন করতে পিন দিন।", async (pin)=>{
+      try{
+        const res = await fetch('/api/config', {
+          method: 'PUT',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ laptopName:name, laptopModel:model, laptopPrice: price?Number(price):null, pin })
+        });
+        if(res.status===401){ toast("পিন সঠিক নয়"); return; }
+        if(!res.ok){ toast("সংরক্ষণ করা যায়নি"); return; }
+        toast("লক্ষ্য সংরক্ষণ করা হয়েছে");
+        await loadAll();
+      }catch(e){ toast("সার্ভারে সংযোগ করা যায়নি"); }
+    });
+  };
+
+  document.getElementById("changePin").onclick = ()=>{
+    const oldPin = document.getElementById("oldPin").value.trim();
+    const newPin = document.getElementById("newPin").value.trim();
+    const err = document.getElementById("pinChangeErr");
+    if(!oldPin){ err.textContent = "বর্তমান পিন দিন"; return; }
+    if(!newPin || newPin.length<4){ err.textContent = "নতুন পিন কমপক্ষে ৪ সংখ্যার দিন"; return; }
+    err.textContent = "";
+    (async ()=>{
+      try{
+        const res = await fetch('/api/change-pin', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ oldPin, newPin })
+        });
+        if(res.status===401){ err.textContent = "বর্তমান পিন সঠিক নয়"; return; }
+        if(!res.ok){ toast("পরিবর্তন করা যায়নি"); return; }
+        toast("পিন পরিবর্তন করা হয়েছে");
+        document.getElementById("oldPin").value="";
+        document.getElementById("newPin").value="";
+      }catch(e){ toast("সার্ভারে সংযোগ করা যায়নি"); }
+    })();
+  };
+}
+
+// ---------------- tab wiring ----------------
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.onclick = ()=>{ currentTab = btn.dataset.tab; render(); };
+});
+
+loadAll();
+setInterval(loadAll, 15000);
+})();
+</script>
+</body>
+</html>
